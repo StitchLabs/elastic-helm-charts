@@ -163,3 +163,11 @@ ingress:
 
 nameOverride: ""
 fullnameOverride: ""
+
+keystore:
+  enabled: false
+#  strings:
+#    bootstrap.password: '${ELASTIC_PASSWORD}'
+#    xpack.notification.slack.account.monitoring.secure_url: "hello world"
+#  files:
+#    gcs.client.default.credentials_file: /usr/share/elasticsearch/config/gcs-credentials.json

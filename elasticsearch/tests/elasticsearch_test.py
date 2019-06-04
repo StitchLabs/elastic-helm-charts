@@ -569,3 +569,21 @@ priorityClassName: "highest"
     r = helm_template(config)
     priority_class_name = r['statefulset'][uname]['spec']['template']['spec']['priorityClassName']
     assert priority_class_name == "highest"
+
+
+def test_keystore_bootstrap():
+    config = '''
+keystore:
+  enabled: true
+  strings:
+    bootstrap.password: '${ELASTIC_PASSWORD}'
+    xpack.notification.slack.account.monitoring.secure_url: "https://hooks.slack.com/services/asdasdasd/asdasdas/asdasd"
+  files:
+    gcs.client.default.credentials_file: /usr/share/elasticsearch/config/gcs-credentials.json
+'''
+    r = helm_template(config)
+    i = r['statefulset'][uname]['spec']['template']['spec']['initContainers'][1]
+    command = " ".join(i['command'])
+    assert 'echo "${ELASTIC_PASSWORD}" | elasticsearch-keystore add -x "bootstrap.password"' in command
+    assert 'echo "https://hooks.slack.com/services/asdasdasd/asdasdas/asdasd" | elasticsearch-keystore add -x "xpack.notification.slack.account.monitoring.secure_url"' in command
+    assert 'elasticsearch-keystore add-file "gcs.client.default.credentials_file" "/usr/share/elasticsearch/config/gcs-credentials.json"' in command

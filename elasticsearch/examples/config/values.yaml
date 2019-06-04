@@ -1,0 +1,33 @@
+---
+
+clusterName: "config"
+replicas: 1
+
+extraEnvs:
+  - name: ELASTIC_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elastic-credentials
+        key: password
+  - name: ELASTIC_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: elastic-credentials
+        key: username
+
+esConfig:
+  elasticsearch.yml: |
+    path.data: /usr/share/elasticsearch/data
+
+secretMounts:
+  - name: elastic-config-secret
+    secretName: elastic-config-secret
+    path: /usr/share/elasticsearch/config/secret
+
+keystore:
+  enabled: true
+  strings:
+    bootstrap.password: '${ELASTIC_PASSWORD}'
+    xpack.notification.slack.account.monitoring.secure_url: "https://hooks.slack.com/services/asdasdasd/asdasdas/asdasd"
+  files:
+    xpack.watcher.encryption_key: /usr/share/elasticsearch/config/secret/watcher_encryption_key

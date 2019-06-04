@@ -4,6 +4,7 @@ CHART:
   - filebeat
 ES_SUITE:
   - default
+  - config
   - multi
   - oss
   - security
