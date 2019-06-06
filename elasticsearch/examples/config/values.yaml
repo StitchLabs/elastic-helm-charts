@@ -14,6 +14,11 @@ extraEnvs:
       secretKeyRef:
         name: elastic-credentials
         key: username
+  - name: SLACK_URL
+    valueFrom:
+      secretKeyRef:
+        name: elastic-config-slack
+        key: slack_url
 
 esConfig:
   elasticsearch.yml: |
@@ -28,6 +33,6 @@ keystore:
   enabled: true
   strings:
     bootstrap.password: '${ELASTIC_PASSWORD}'
-    xpack.notification.slack.account.monitoring.secure_url: "https://hooks.slack.com/services/asdasdasd/asdasdas/asdasd"
+    xpack.notification.slack.account.monitoring.secure_url: '${SLACK_URL}'
   files:
     xpack.watcher.encryption_key: /usr/share/elasticsearch/config/secret/watcher_encryption_key

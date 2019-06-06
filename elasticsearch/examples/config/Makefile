@@ -7,8 +7,9 @@ install:
 	helm upgrade --wait --timeout=600 --install $(RELEASE) --values ./values.yaml ../../ ; \
 
 secrets:
-	kubectl delete secret elastic-config-credentials elastic-config-secret || true
+	kubectl delete secret elastic-config-credentials elastic-config-secret elastic-config-slack || true
 	kubectl create secret generic elastic-config-credentials --from-literal=password=changeme --from-literal=username=elastic
+	kubectl create secret generic elastic-config-slack --from-literal=slack_url='https://hooks.slack.com/services/asdasdasd/asdasdas/asdasd'
 	kubectl create secret generic elastic-config-secret --from-file=./watcher_encryption_key
 
 test: secrets install goss
